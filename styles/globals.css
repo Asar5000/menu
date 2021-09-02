@@ -14,3 +14,8 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.menuWrapper {
+  width: 200px;
+  border-radius: 10px;
+}

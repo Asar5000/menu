@@ -1,13 +1,18 @@
 import Airtable from 'airtable';
+import styles from '../styles/Home.module.css'
+
 import { useEffect, useState } from 'react';
 import { MenuList, MenuItem, Dropdown, SubMenuItem } from 'react-menu-list';
 import mergeDeep from '../helpers/mergeDeep';
+import useDynamicRefs from '../hooks/useDynamicRefs';
+// import '../styles/globals.css'
 
 const table = new Airtable({ apiKey: 'keyJJJN5MlBHVo3T7' }).base('appBtrYj2IybnYTds')
 
 const Menu = () => {
   const [data, setData] = useState<Array<{}>>([])
   const [mergedData, setMergedData] = useState<Record<string, any>>({})
+  const [getRef, setRef] = useDynamicRefs<SubMenuItem>();
 
   useEffect(() => {
     setMergedData(mergeDeep({}, ...data))
@@ -42,102 +47,116 @@ const Menu = () => {
         arr.push(obj)
 
       });
-  
+
       fetchNextPage();
     })
-    .then(() => setData(arr))
-    .catch(err => console.log(err));    
+      .then(() => setData(arr))
+      .catch(err => console.log(err));
   }, [])
 
   return (
-    <div style={{ width: 200 }}>
+    <div className={styles.menuWrapper}>
       <MenuList>
-        { mergedData && Object.keys(mergedData).map((item1, i) => (
+        {mergedData && Object.keys(mergedData).map((item1, i) => (
           <SubMenuItem
-          key={i}
-          style={{cursor: 'pointer', userSelect: 'none'}}
-          highlightedStyle={{background: 'lightgray'}}
-          menu={
-            <Dropdown>
-              <MenuList>
-                { mergedData[item1] && Object.keys(mergedData[item1]).map((item2, i) => {
-                  return (
-                    <SubMenuItem
-                      key={i}
-                      style={{cursor: 'pointer', userSelect: 'none'}}
-                      highlightedStyle={{background: 'lightgray'}}
-                      menu={
-                        <Dropdown>
-                          <MenuList>
-                            { mergedData[item1][item2] && Object.keys(mergedData[item1][item2]).map((item3, i) => {
-                              return (
-                                <SubMenuItem
-                                  key={i}
-                                  style={{cursor: 'pointer', userSelect: 'none'}}
-                                  highlightedStyle={{background: 'lightgray'}}
-                                  menu={
-                                    <Dropdown>
-                                      <MenuList>
-                                        { mergedData[item1][item2][item3] && Object.keys(mergedData[item1][item2][item3]).map((item4, i) => {
-                                          return (
-                                            <SubMenuItem
-                                              key={i}
-                                              style={{cursor: 'pointer', userSelect: 'none'}}
-                                              highlightedStyle={{background: 'lightgray'}}
-                                              menu={
-                                                <Dropdown>
-                                                  <MenuList>
-                                                    { mergedData[item1][item2][item3][item4] && Object.keys(mergedData[item1][item2][item3][item4]).map((item5, i) => {
-                                                      return (
-                                                        <SubMenuItem
-                                                          key={i}
-                                                          style={{cursor: 'pointer', userSelect: 'none'}}
-                                                          highlightedStyle={{background: 'lightgray'}}
-                                                          menu={
-                                                            <Dropdown>
-                                                              <MenuList>
-                                                                { mergedData[item1][item2][item3][item4][item5] && Object.keys(mergedData[item1][item2][item3][item4][item5]).map((item6, i) => {
-                                                                  return <MenuItem key={item6}>{item6}</MenuItem>
-                                                                } )}
-                                                              </MenuList>
-                                                            </Dropdown>
-                                                          }
-                                                        >
-                                                          {item5}
-                                                        </SubMenuItem>
-                                                      )
-                                                    } )}
-                                                  </MenuList>
-                                                </Dropdown>
-                                              }
-                                            >
-                                              {item4}
-                                            </SubMenuItem>
-                                          )
-                                        } )}
-                                      </MenuList>
-                                    </Dropdown>
-                                  }
-                                >
-                                  {item3}
-                                </SubMenuItem>
-                              )
-                            } )}
-                          </MenuList>
-                        </Dropdown>
-                      }
-                    >
-                      {item2}
-                    </SubMenuItem>
-                  )       
-                } )}
-              </MenuList>
-            </Dropdown>
-          }
-        >
-          {item1}
-        </SubMenuItem>
-        )) }
+            ref={setRef(`sm_${item1}`)}
+            key={i}
+            menu={
+              <div className={styles.subMenuItem} onMouseLeave={() => getRef(`sm_${item1}`).current!.close()}>
+                <Dropdown>
+                  <MenuList>
+                    {mergedData[item1] && Object.keys(mergedData[item1]).map((item2, i) => {
+                      return (
+                        <SubMenuItem
+                          key={i}
+                          highlightedStyle={{ color: '#333' }}
+                          style={{ cursor: 'pointer', userSelect: 'none' }}
+                          menu={
+                            <div className={styles.subMenuItem}>
+                              <Dropdown>
+                                <MenuList>
+                                  {mergedData[item1][item2] && Object.keys(mergedData[item1][item2]).map((item3, i) => {
+                                    return (
+                                      <SubMenuItem
+                                        key={i}
+                                        highlightedStyle={{ color: '#333' }}
+                                        style={{ cursor: 'pointer', userSelect: 'none' }}
+                                        menu={
+                                          <div className={styles.subMenuItem}>
+                                            <Dropdown>
+                                              <MenuList>
+                                                {mergedData[item1][item2][item3] && Object.keys(mergedData[item1][item2][item3]).map((item4, i) => {
+                                                  return (
+                                                    <SubMenuItem
+                                                      key={i}
+                                                      highlightedStyle={{ color: '#333' }}
+                                                      style={{ cursor: 'pointer', userSelect: 'none' }}
+                                                      menu={
+                                                        <div className={styles.subMenuItem}>
+                                                          <Dropdown>
+                                                            <MenuList>
+                                                              {mergedData[item1][item2][item3][item4] && Object.keys(mergedData[item1][item2][item3][item4]).map((item5, i) => {
+                                                                return (
+                                                                  <SubMenuItem
+                                                                    key={i}
+                                                                    highlightedStyle={{ color: '#333' }}
+                                                                    style={{ cursor: 'pointer', userSelect: 'none' }}
+                                                                    menu={
+                                                                      <div className={styles.subMenuItem}>
+                                                                        <Dropdown>
+                                                                          <MenuList>
+                                                                            {mergedData[item1][item2][item3][item4][item5] && Object.keys(mergedData[item1][item2][item3][item4][item5]).map((item6, i) => {
+                                                                              return <MenuItem key={item6}><a href="/123">{item6}</a></MenuItem>
+                                                                            })}
+                                                                          </MenuList>
+                                                                        </Dropdown>
+                                                                      </div>
+                                                                    }
+                                                                  >
+                                                                    <a href="">{item5}</a>
+                                                                  </SubMenuItem>
+                                                                )
+                                                              })}
+                                                            </MenuList>
+                                                          </Dropdown>
+                                                        </div>
+                                                      }
+                                                    >
+                                                      <a href="">{item4}</a>
+                                                    </SubMenuItem>
+
+                                                  )
+                                                })}
+                                              </MenuList>
+                                            </Dropdown>
+                                          </div>
+                                        }
+                                      >
+                                        <a href="">{item3}</a>
+                                      </SubMenuItem>
+
+                                    )
+                                  })}
+                                </MenuList>
+                              </Dropdown>
+                            </div>
+                          }
+                        >
+                          <a href="">{item2}</a>
+                        </SubMenuItem>
+
+                      )
+                    })}
+                  </MenuList>
+
+                </Dropdown>
+              </div>
+            }
+          >
+            <a href="">{item1}</a>
+          </SubMenuItem>
+
+        ))}
       </MenuList>
     </div>
   )
