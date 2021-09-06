@@ -42,8 +42,9 @@ const RecursiveMenu = ({ data }: Props) => {
     return (
       <SubMenuItem menu={
           <div className={ styles.subMenuItem } onMouseLeave={ () => {
-            if (isRoot) getRef('menu_ref_root' + key).current!.close()
-          } }>
+              if (isRoot) getRef('menu_ref_root' + key).current!.close()
+            }
+          }>
             <Dropdown>
               { constructMenuList(item, { key: key }) }
             </Dropdown>
