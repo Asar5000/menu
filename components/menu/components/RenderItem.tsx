@@ -8,7 +8,6 @@ interface IRenderMenuProps {
 
 export const RenderItem: FC<IRenderMenuProps> = ({index, item,}) => {
     const trigger = Object.values(item) && Object.values(item).length;
-
     return (
         <ul key={index}
             className={trigger ? styles.subMenuItem : styles.subMenuItemHide}>
